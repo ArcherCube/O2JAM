@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="头文件\Game">
+      <UniqueIdentifier>{d6035ec2-db64-4f6f-abef-ed7e8155f102}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Game">
+      <UniqueIdentifier>{d092de73-2658-4707-9008-9e07bc076eeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Resource">
+      <UniqueIdentifier>{0e94198d-92e6-44d9-9dbc-6e86a119508f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Engine">
+      <UniqueIdentifier>{2361645e-b049-4360-9fb0-4ba8a57ce176}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Engine">
+      <UniqueIdentifier>{1dd42bd0-a4de-4108-9992-3b355572b59e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Engine\Util">
+      <UniqueIdentifier>{a0691797-448b-4065-8db6-36bc5a7c8b32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Engine\Util">
+      <UniqueIdentifier>{58f9576d-4556-424c-b380-a3b3919e9c09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Game\Game">
+      <UniqueIdentifier>{752c6764-a7d1-470f-aa68-aade48af48b8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="O2JAM.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>头文件\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>头文件\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>头文件\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Constant.h">
+      <Filter>头文件\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Note.h">
+      <Filter>头文件\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreBoard.h">
+      <Filter>头文件\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>头文件\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="BitmapModel.h">
+      <Filter>头文件\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="TextModel.h">
+      <Filter>头文件\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Keyboard.h">
+      <Filter>头文件\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>头文件\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Action.h">
+      <Filter>头文件\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonType.h">
+      <Filter>头文件\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Background.h">
+      <Filter>头文件\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="FileUtil.h">
+      <Filter>头文件\Engine\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>头文件\Engine\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="MusicPlayer.h">
+      <Filter>头文件\Engine\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="CentralTimer.h">
+      <Filter>头文件\Engine\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Key.h">
+      <Filter>头文件\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Railway.h">
+      <Filter>头文件\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Track.h">
+      <Filter>头文件\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Recorder.h">
+      <Filter>头文件\Engine\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Path.h">
+      <Filter>头文件\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Message.h">
+      <Filter>头文件\Engine\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="CountDown.h">
+      <Filter>头文件\Game</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Note.cpp">
+      <Filter>源文件\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreBoard.cpp">
+      <Filter>源文件\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>源文件\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="BitmapModel.cpp">
+      <Filter>源文件\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="TextModel.cpp">
+      <Filter>源文件\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Keyboard.cpp">
+      <Filter>源文件\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor.cpp">
+      <Filter>源文件\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Action.cpp">
+      <Filter>源文件\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Background.cpp">
+      <Filter>源文件\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="CentralTimer.cpp">
+      <Filter>源文件\Engine\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugMessage.cpp">
+      <Filter>源文件\Engine\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="FileUtil.cpp">
+      <Filter>源文件\Engine\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="MusicPlayer.cpp">
+      <Filter>源文件\Engine\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>源文件\Engine\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Key.cpp">
+      <Filter>源文件\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Railway.cpp">
+      <Filter>源文件\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Track.cpp">
+      <Filter>源文件\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Recorder.cpp">
+      <Filter>源文件\Engine\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="O2JAM.cpp">
+      <Filter>源文件\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>源文件\Game\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="GameProcess.cpp">
+      <Filter>源文件\Game\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="CountDown.cpp">
+      <Filter>源文件\Game</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="O2JAM.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="O2JAM.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
