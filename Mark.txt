@@ -14,5 +14,8 @@ C/C++
 ·action加入transform的概念；兼容textModel
 ·物理引擎、actor的受力与速度
 ·TextModel优化（handle复用）
-·melodyList尾部对齐
-·melodyList异音头尾对齐
+·melody尾部对齐
+·melody异音头尾对齐
+
+优化：
+1、layout类，控制各个actor的位置

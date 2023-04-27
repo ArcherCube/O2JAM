@@ -4,6 +4,7 @@
 #include "Constant.h"
 #include "Track.h"
 
+class Melody;
 
 class Railway
 {
@@ -14,7 +15,7 @@ private:
 public:
 	explicit Railway();
 
-	const UINT LoadMelodyList(const MelodyList* const melodyList) const;
+	const UINT LoadMelody(const Melody* const melodyList) const;
 
 	const HitType PressHit(const KeyName& key) const;
 	const HitType ReleaseHit(const KeyName& key) const;

@@ -20,9 +20,9 @@ const Model* const Actor::GetModel() const
 }
 
 
-UINT Actor::PlayAction(const UINT& no) const
+UINT Actor::PlayAction(const String& actionName) const
 {
-	((BitmapModel* const)model)->ChangeCurrentAction(no);
+	((BitmapModel* const)model)->ChangeCurrentAction(actionName);
 
 	//Œ¥∆Ù”√≈–∂œ
 	return 0;

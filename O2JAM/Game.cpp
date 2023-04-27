@@ -19,7 +19,7 @@
 double Game::gameSpeed = DEFAULT_GAME_SPEED;
 
 Game::Game()
-	:currentMusicFilename(TEXT("")), musicPauseTimestamp(0), status(Status::HOLDING), countDown(0)
+	:currentMusicName(TEXT("")), musicPauseTimestamp(0), status(Status::HOLDING), countDown(0)
 	, background(new Background()), railway(new Railway()), keyboard(new Keyboard()), scoreBoard(new ScoreBoard())
 {
 }
@@ -109,6 +109,7 @@ void Game::ProcessKeyUp(const KeyName& key)
 	{
 		scoreBoard->Count(railway->ReleaseHit(key), 1);
 	}
+	break;
 	case Status::RECORDING:
 	{
 		//松开的时候才记录

@@ -1,28 +1,48 @@
 ﻿#include "MusicPlayer.h"
 #include "Message.h"
+#include "Path.h"
 #include "FileUtil.h"
 
 UINT MusicPlayer::wDeviceID = 0;
-
-void MusicPlayer::Open(const String& path)
+const std::vector<MusicPlayer::MusicType> MusicPlayer::acceptMusicTypes =
 {
-	DWORD dwReturn;
-
-	MCI_OPEN_PARMS OpenParms;
-	OpenParms.lpstrElementName = path.c_str();
-
-	//通过WchaStirng
-	if (FileUtil::FileIsSuffix(path, TEXT("wav"))) OpenParms.lpstrDeviceType = TEXT("waveaudio");
-	else OpenParms.lpstrDeviceType = TEXT("mpegvideo");
-
-	if (dwReturn = mciSendCommand(NULL, MCI_OPEN, MCI_OPEN_TYPE | MCI_OPEN_ELEMENT,
-		(DWORD_PTR)&OpenParms))
 	{
-		Message::ShowMCIError(dwReturn);
-		return;
+		TEXT(".wav"),
+		TEXT("waveaudio")
+	},
+	{
+		TEXT(".mp3"),
+		TEXT("mpegvideo")
+	}
+};
+
+bool MusicPlayer::Open(const String& musicName)
+{
+	MCI_OPEN_PARMS openParms = { 0 };
+	for (auto current = acceptMusicTypes.cbegin(); current != acceptMusicTypes.cend(); ++current)
+	{
+		const String& fullPath = Path::musicPath + musicName + current->suffix;
+		if (FileUtil::IsExist(fullPath)) {
+			openParms.lpstrElementName = fullPath.c_str();
+			openParms.lpstrDeviceType = current->deviceType;
+			break;
+		}
+		if ((current + 1) == acceptMusicTypes.cend()) {
+			Message::ShowMessage(TEXT("音乐文件不存在，请确认"));
+			return false;
+		}
 	}
 
-	wDeviceID = OpenParms.wDeviceID;
+	DWORD error = mciSendCommand(NULL, MCI_OPEN, MCI_OPEN_TYPE | MCI_OPEN_ELEMENT, (DWORD_PTR)&openParms);
+	if (error)
+	{
+		Message::ShowMCIError(error);
+		return false;
+	}
+
+	wDeviceID = openParms.wDeviceID;
+
+	return true;
 }
 
 void MusicPlayer::Close()

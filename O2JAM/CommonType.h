@@ -77,16 +77,6 @@ struct Area
 //const Area Area::ZERO = AREA(0, 0, 0, 0);
 
 
-#define ACTION_PIECE(x,y,width,height,delay) {{x,y},{width,height},delay}
-struct ActionPiece
-{
-	Position sourcePosition;
-	Size size;
-	UINT delay;
-};
-typedef std::initializer_list<const ActionPiece> ActionPieceInitList;
-typedef std::list<ActionPiece> ActionPieceList;
-
 
 typedef DWORD TimestampType;
 
@@ -101,28 +91,6 @@ enum class KeyName :WPARAM
 	K = 'K',
 	L = 'L'
 };
-
-
-#define MELODY_SINGLE(timestamp,keyName,delay) {timestamp,{{keyName,delay}}}
-#define MELODY_FULL(timestamp,delayA,delayS,delayD,delaySPACE,delayJ,delayK,delayL) {timestamp,{{KeyName::A,delayA},{KeyName::S,delayS},{KeyName::D,delayD},{KeyName::SPACE,delaySPACE},{KeyName::J,delayJ},{KeyName::K,delayK},{KeyName::L,delayL}}}
-struct Melody
-{
-private:
-	typedef std::unordered_map<KeyName, TimestampType> DelayHashmap;
-public:
-	//对于玩家，这个时间戳是按键按下的时间
-	TimestampType timestamp;
-	DelayHashmap delayHashmap;
-};
-//struct MelodyNOLess
-//{
-//	bool operator()(const Melody&  _Left, const Melody& _Right) const
-//	{
-//		return _Left.timestamp <= _Right.timestamp;
-//	}
-//};
-typedef std::list<Melody> MelodyList;
-typedef MelodyList::iterator MelodyListIter;
 
 
 enum class HitType :UINT

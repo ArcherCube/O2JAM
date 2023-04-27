@@ -155,6 +155,7 @@
     <ClInclude Include="CentralTimer.h" />
     <ClInclude Include="Constant.h" />
     <ClInclude Include="CountDown.h" />
+    <ClInclude Include="Melody.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="CommonType.h" />
     <ClInclude Include="FileUtil.h" />
@@ -189,11 +190,13 @@
     <ClCompile Include="GameProcess.cpp" />
     <ClCompile Include="Key.cpp" />
     <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="Melody.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MusicPlayer.cpp" />
     <ClCompile Include="Note.cpp" />
     <ClCompile Include="O2JAM.cpp" />
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="Path.cpp" />
     <ClCompile Include="Railway.cpp" />
     <ClCompile Include="Recorder.cpp" />
     <ClCompile Include="Renderer.cpp" />

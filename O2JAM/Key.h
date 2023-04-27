@@ -9,13 +9,6 @@
 
 class Key : public Actor
 {
-private:
-	enum class KeyAction :UINT
-	{
-		DEFAULT = 0,
-		DARK = 1,
-		LIGHT = 2
-	};
 public:
 	enum class KeyType :UINT
 	{
@@ -26,7 +19,6 @@ public:
 	};
 private:
 	const KeyType keyType;
-	KeyAction keyAction;
 	bool isPressed;
 
 	TimestampType lastPressTime,lastReleaseTime;

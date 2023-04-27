@@ -38,9 +38,11 @@ UINT CentralTimer::Del(const String& tag)
 
 TimestampType CentralTimer::GetExcTime(const String& tag)
 {
-	if (timerHashmap->find(tag) != timerHashmap->cend())
+	TimerHashmapCiter cIter = timerHashmap->find(tag);
+
+	if (cIter != timerHashmap->cend())
 	{
-		return timerHashmap->at(tag)->excTime;
+		return cIter->second->excTime;
 	}
 
 	return 0;

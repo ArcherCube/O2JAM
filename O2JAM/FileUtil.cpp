@@ -1,147 +1,65 @@
 #include "FileUtil.h"
 #include "CommDlg.h"
-
+#include "Message.h"
 #include "Path.h"
 
-using std::getline;
-
-HWND FileUtil::hWnd = nullptr;
-
-UINT FileUtil::Init(const HWND& _hWnd)
-{
-	hWnd = _hWnd;
-
-	return 0;
-}
-
-UINT FileUtil::LoadActionsFromFile(const String& modelFilename, Actions* const actions)
-{
-	Ifstream ifStream;
-	ifStream.open(MODEL_ROOT_PATH + modelFilename + TEXT(".txt"));
-	if (!ifStream.is_open()) return FAIL;
-
-	String lineOfFile;
-	double x, y;
-	UINT width, height, delay;
-	ActionPieceList* actionPieceList = new ActionPieceList();
-	while (getline(ifStream, lineOfFile))
-	{
-		//读到非活动行，处理“是否存在上一个动作加载完毕”后跳过本行
-		if (lineOfFile.empty() || lineOfFile[0] == ':')
-		{
-			//若队列中有元素则代表有加载动作；否则直接忽略当前行
-			if (actionPieceList->size())
-			{
-				//加载一个动作后，把动作片段队列对象的指针用于初始化一个动作
-				actions->push_back(new Action(actionPieceList));
-
-				//随后创建一个新的动作片段队列对象以进行之后的加载
-				actionPieceList = new ActionPieceList();
-			}
-			continue;
-		}
-		//若为活动行，则加载数据
-		else
-		{
-			//以字符串流的形式将当前行的数据传到5个变量中；若数据不完整或异常（例如delay为0），则忽略当前动作片段
-			if (Istringstream(lineOfFile) >> x >> y >> width >> height >> delay && delay > 0)
-			{
-				actionPieceList->push_back(ACTION_PIECE(x, y, width, height, delay));
-			}
-			else
-			{
-				continue;
-			}
-		}
-	}
-	//当读不到下一行后，可能存在上一个动作加载完毕
-	if (actionPieceList->size())
-	{
-		actions->push_back(new Action(actionPieceList));
-	}
-	//若不存在，则表示当前为最后创建的一个多余的动作片段队列，delete掉
-	else
-	{
-		delete actionPieceList;
-	}
-
-	ifStream.close();
-
-	return SUCCESS;
-}
-
-UINT FileUtil::LoadMelodyListFromFile(const String& musicFilename, MelodyList* const melodyList)
-{
-	Ifstream ifStream;
-	ifStream.open(MUSIC_ROOT_PATH + musicFilename + TEXT(".txt"));
-	if (!ifStream.is_open()) return FAIL;
-
-	String lineOfFile;
-	UINT delayA, delayS, delayD, delaySPACE, delayJ, delayK, delayL;
-	TimestampType timestamp;
-	while (getline(ifStream, lineOfFile))
-	{
-		//忽略空行
-		if (lineOfFile.empty()) continue;
-		//非活动行则加载取数据
-		else
-		{
-			if (Istringstream(lineOfFile) >> timestamp >> delayA >> delayS >> delayD >> delaySPACE >> delayJ >> delayK >> delayL)
-			{
-				melodyList->push_back(MELODY_FULL(timestamp, delayA, delayS, delayD, delaySPACE, delayJ, delayK, delayL));
-			}
-		}
-	}
-
-	ifStream.close();
-
-	return SUCCESS;
-}
-
-UINT FileUtil::CreateMelodyFile(const String& musicFilename, const MelodyList* const melodyList)
+UINT FileUtil::Create(const String& content, const String& fullPath)
 {
 	Ofstream ofStream;
-	ofStream.open(MUSIC_ROOT_PATH + musicFilename + TEXT(".txt"), std::ios::app);
+	ofStream.open(fullPath, std::ios::app);
 	if (!ofStream.is_open()) return FAIL;
-
-	for (const auto& melody : *melodyList)
-	{
-		//把记录了按键时长的hashmap提取出来
-		const auto& delayHashmap = melody.delayHashmap;
-		//寻找其对应的按键时长记录元素的迭代器
-		const auto& iterA = delayHashmap.find(KeyName::A);
-		const auto& iterS = delayHashmap.find(KeyName::S);
-		const auto& iterD = delayHashmap.find(KeyName::D);
-		const auto& iterSPACE = delayHashmap.find(KeyName::SPACE);
-		const auto& iterJ = delayHashmap.find(KeyName::J);
-		const auto& iterK = delayHashmap.find(KeyName::K);
-		const auto& iterL = delayHashmap.find(KeyName::L);
-
-		//按格式写入一行
-		ofStream << melody.timestamp << " "
-			<< (iterA == delayHashmap.cend() ? 0 : iterA->second) << " "
-			<< (iterS == delayHashmap.cend() ? 0 : iterS->second) << " "
-			<< (iterD == delayHashmap.cend() ? 0 : iterD->second) << " "
-			<< (iterSPACE == delayHashmap.cend() ? 0 : iterSPACE->second) << " "
-			<< (iterJ == delayHashmap.cend() ? 0 : iterJ->second) << " "
-			<< (iterK == delayHashmap.cend() ? 0 : iterK->second) << " "
-			<< (iterL == delayHashmap.cend() ? 0 : iterL->second) << std::endl;
-	}
+	ofStream << content;
 	ofStream.close();
 
 	return SUCCESS;
 }
 
-UINT FileUtil::SelectFile(const LPTSTR& fileName)
+UINT FileUtil::Read(const String& directory, const std::function<void(const String&)>& exc)
+{
+	//根据sourcePath加载动作文件
+	Ifstream ifStream;
+	ifStream.open(directory);
+	if (!ifStream.is_open())
+	{
+		return FAIL;
+	}
+
+	String line;
+	while (std::getline(ifStream, line))
+	{
+		exc(line);
+	}
+	//补充执行一个空行，表示读取结束，方便回调函数处理
+	exc(TEXT(""));
+
+	ifStream.close();
+
+	return SUCCESS;
+}
+
+UINT FileUtil::Select(const LPTSTR& path, const String& directory, const String& title, const std::vector<String>& accept)
 {
 	OPENFILENAME ofn = { 0 };
 
+	String acceptStr = TEXT("");
+	for (const auto& suffix : accept)
+	{
+		acceptStr.append(TEXT("*") + suffix + TEXT(";"));
+	}
+	acceptStr.erase(acceptStr.end() - 1);
+
+	//LPTSTR filter = new TCHAR[1024];
+	//TODO: 这里的动态路径还是没弄好
+	//wsprintf(filter, TEXT("允许的类型(%s)\0%s\0\0"), acceptStr.c_str(), acceptStr.c_str());
+	//String filterStr = filter;
+
 	ofn.lStructSize = sizeof(ofn);
 	ofn.hwndOwner = nullptr;
-	ofn.lpstrTitle = TEXT("选择音乐文件\0");
-	ofn.lpstrFilter = TEXT("允许的音乐媒体(*.mp3, *.wav)\0*.mp3;*.wav\0\0");
-	ofn.lpstrInitialDir = TEXT(".\\src\\music\\\0");
-	ofn.lpstrFile = fileName;
+	ofn.lpstrTitle = title.c_str();
+	ofn.lpstrFilter = TEXT("允许的类型(*.*)\0*.*\0\0");
+	//ofn.lpstrFilter = filterStr.c_str();
+	ofn.lpstrInitialDir = directory.c_str();
+	ofn.lpstrFile = path;
 	ofn.nMaxFile = MAX_PATH;
 	ofn.nFilterIndex = 0;
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_EXPLORER;
@@ -152,27 +70,32 @@ UINT FileUtil::SelectFile(const LPTSTR& fileName)
 	wchar_t currentDirectory[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, currentDirectory);
 
-	auto result = GetOpenFileName(&ofn); 
-	
+	auto result = GetOpenFileName(&ofn);
+
 	SetCurrentDirectory(currentDirectory);
 
 	return result;
 }
 
-bool FileUtil::FileIsSuffix(const String& path, const String&& suffix)
+bool FileUtil::IsSuffix(const String& path, const String& suffix)
 {
 	size_t pos = path.find('.');
 	if (pos == String::npos) return false;
 	return path.substr(pos + 1, path.size() - (pos + 1)).compare(suffix) == 0;
 }
 
-UINT FileUtil::GetFilenameFromPath(const TCHAR* const path, String& filename)
+bool FileUtil::IsExist(const String& path)
 {
-	String* tmp = new String(path);
-	size_t posOfSeparator = tmp->rfind('\\');
-	size_t posOfPoint = tmp->rfind('.');
-	filename = tmp->substr(posOfSeparator + 1, posOfPoint - (posOfSeparator + 1));
-	delete tmp;
+	Ifstream ifstream(path);
+	return ifstream.good();
+}
 
-	return SUCCESS;
+const String FileUtil::GetFilename(const LPCTSTR& path)
+{
+	String tmp = path;
+	size_t posOfSeparator = tmp.rfind('\\');
+	size_t posOfPoint = tmp.rfind('.');
+	const auto result = tmp.substr(posOfSeparator + 1, posOfPoint - (posOfSeparator + 1));
+
+	return result;
 }

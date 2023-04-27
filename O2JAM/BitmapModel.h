@@ -7,8 +7,6 @@
 #include "Constant.h"
 #include "CommonType.h"
 #include "Model.h"
-
-//能在此处包含engine级别，是因为从action到bitmapModel是单向的，即bitmapModel的实现需要用到action，而action的实现完全与bitmapModel无关
 #include "Action.h"
 
 
@@ -16,7 +14,7 @@ class BitmapModel :public Model
 {
 private:
 	//动作列表
-	Actions* const actions;
+	ActionMap* const actionMap;
 
 	//当前动作，为指向常量的指针
 	const Action* currentAction;
@@ -32,6 +30,9 @@ private:
 
 	//上次切换动作的时间
 	TimestampType actionChangeTime;
+private:
+	const UINT LoadSize(const String& modelFilename);
+	const UINT LoadAction(const String& modelFilename);
 public:
 	explicit BitmapModel(const String& modelFilename, const Size& fullSize = SIZE(0, 0), const DWORD& renderType = SRCCOPY);
 
@@ -47,7 +48,7 @@ public:
 
 	const TimestampType GetLastChangeTime() const = delete;
 
-	const UINT ChangeCurrentAction(const UINT& no);
+	const UINT ChangeCurrentAction(const String& actionName);
 
 	virtual ~BitmapModel();
 };

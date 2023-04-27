@@ -3,7 +3,8 @@
 #include <windows.h>
 #include <iostream>
 #include <functional>
-#include <list>
+#include <vector>
+#include <functional>
 #include "CommonType.h"
 #include "Constant.h"
 
@@ -13,24 +14,17 @@
 
 class FileUtil
 {
-private:
-	static HWND hWnd;
 public:
-	//FileUtil(HWND hWnd);
-	static UINT Init(const HWND& hWnd);
+	static UINT Create(const String& content, const String& path);
 
-	static UINT LoadActionsFromFile(const String& modelFilename, Actions* const actions);
+	static UINT Read(const String& path, const std::function<void(const String&)>& exc);
 
-	static UINT LoadMelodyListFromFile(const String& musicFilename, MelodyList* const melodyList);
+	static UINT Select(const LPTSTR& path, const String& directory, const String& title, const std::vector<String>& accept);
 
-	static UINT CreateMelodyFile(const String& musicFilename, const MelodyList* const melodyList);
+	static bool IsSuffix(const String& path, const String& suffix);
 
-	static UINT SelectFile(const LPTSTR& path);
+	static bool IsExist(const String& path);
 
-	static bool FileIsSuffix(const String& path, const String&& suffix);
-
-	static UINT GetFilenameFromPath(const TCHAR* const path, String& filename);
-
-	//~FileUtil();
+	static const String GetFilename(const LPCTSTR& path);
 };
 

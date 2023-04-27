@@ -6,7 +6,7 @@ Note::Note(const NoteColorType& noteColorType, const Position& position, const U
 	:Actor(noteColorType == NoteColorType::WHITE ? WHITE_NOTE_PATH : (noteColorType == NoteColorType::BLUE ? BLUE_NOTE_PATH : YELLOW_NOTE_PATH), position, NOTE_Z, SIZE(0, height))
 	, delay(delay),isHolding(false)
 {
-	PlayAction(static_cast<UINT>(NoteAction::STAND));
+	PlayAction(TEXT("stand"));
 }
 
 const bool Note::IsDelay() const

@@ -2,6 +2,7 @@
 
 #include "Game.h"
 
+#include "Melody.h"
 #include "Message.h"
 
 Railway::Railway()
@@ -17,9 +18,9 @@ Railway::Railway()
 	trackHashmap->insert({ KeyName::L,new Track(Note::NoteColorType::WHITE,  TRACK_L_POSITION_X) });
 }
 
-const UINT Railway::LoadMelodyList(const MelodyList* const melodyList) const
+const UINT Railway::LoadMelody(const Melody* const melody) const
 {
-	for (const auto& melody : *melodyList)
+	for (const auto& melody : *(melody->getMelodyPieceList()))
 	{
 		for (const auto& delayPair : melody.delayHashmap)
 		{

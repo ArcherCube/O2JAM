@@ -31,7 +31,7 @@ private:
 private:
 	Status status;
 	TimestampType musicPauseTimestamp;
-	String currentMusicFilename;
+	String currentMusicName;
 	UINT countDown;
 
 	//元件类且为对象的指针，变量本身为const

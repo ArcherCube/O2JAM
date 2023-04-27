@@ -1,9 +1,18 @@
 #pragma once
 
-#include <Windows.h>
+#include <windows.h>
+#include <filesystem>
+#include "CommonType.h"
 
-#define MODEL_ROOT_PATH TEXT(".\\src\\data\\")
-#define MUSIC_ROOT_PATH TEXT(".\\src\\music\\")
+class Path {
+private:
+	static const String currentPath;
+public:
+	static const String modelPath;
+	static const String musicPath;
+	static const String melodyPath;
+};
+
 
 #define BACKGROUND_PATH TEXT("Background")
 

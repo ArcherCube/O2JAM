@@ -1,17 +1,16 @@
 #include "Recorder.h"
-
 #include "Message.h"
 
-MelodyList* const Recorder::melodyList = new MelodyList();
+MelodyPieceList* const Recorder::melodyPieceList = new MelodyPieceList();
 
 UINT Recorder::AlignHead()
 {
 	UINT result = 0;
 	UINT tmpResult = 0;
 
-	//melodyList按timestamp从小到大排序（注意此处使用的是list，std::sort通用排序不适用list
-	melodyList->sort(
-		[](const Melody& left, const Melody& right)
+	//melodyPieceList按timestamp从小到大排序（注意此处使用的是list，std::sort通用排序不适用list
+	melodyPieceList->sort(
+		[](const MelodyPiece& left, const MelodyPiece& right)
 		{
 			return left.timestamp <= right.timestamp;
 		}
@@ -19,19 +18,19 @@ UINT Recorder::AlignHead()
 
 	TimestampType avgTimestampOfSection = 0;
 	UINT count = 0;
-	MelodyListIter iter = melodyList->begin();
-	MelodyListIter target = iter;
-	while (target != melodyList->cend())
+	MelodyPieceListIter iter = melodyPieceList->begin();
+	MelodyPieceListIter target = iter;
+	while (target != melodyPieceList->cend())
 	{
 		//使iter为target下一个
 		++iter;
 
 		//注意此处不需要处理“数量”的问题。
-		//melodyList按timestamp从小到大排序，设某一个为t，一组7个按键中的其中一个为a，第8个（实际上是第7个找出来的元素）为b且ab为同一个键位，NOTE_ALIGN_MAX为I
+		//melodyPieceList按timestamp从小到大排序，设某一个为t，一组7个按键中的其中一个为a，第8个（实际上是第7个找出来的元素）为b且ab为同一个键位，NOTE_ALIGN_MAX为I
 		//此时b与a的时间差必小于NOTE_ALIGN_MAX
 		//反证：据题意有b<t+I，若b-a>=I既b>=I+a，则t+I>I+a，即t>a，与题意矛盾
 		//所以b-a<I。而同一个键在一个NOTE_ALIGN_MAX内被连续敲击，按NOTE_ALIGN_MAX的设定，算作一次
-		for (avgTimestampOfSection = target->timestamp, count = 1; iter != melodyList->cend() && iter->timestamp - target->timestamp < NOTE_ALIGN_MAX; ++count, ++iter)
+		for (avgTimestampOfSection = target->timestamp, count = 1; iter != melodyPieceList->cend() && iter->timestamp - target->timestamp < NOTE_ALIGN_MAX; ++count, ++iter)
 		{
 			avgTimestampOfSection = (avgTimestampOfSection * count + iter->timestamp) / (count + 1);
 			//跳出时iter会得到一个[target,iter)的区间，区间内则为一个对齐组，将它们的timestamp全部设为其平均值
@@ -61,9 +60,9 @@ UINT Recorder::AlignTail()
 	UINT result = 0;
 	UINT tmpResult = 0;
 
-	//melodyList按timestamp+delay=releaseTimestamp（音符尾部）从小到大排序（注意此处使用的是list，std::sort通用排序不适用list
-	melodyList->sort(
-		[](const Melody& left, const Melody& right)
+	//melodyPieceList按timestamp+delay=releaseTimestamp（音符尾部）从小到大排序（注意此处使用的是list，std::sort通用排序不适用list
+	melodyPieceList->sort(
+		[](const MelodyPiece& left, const MelodyPiece& right)
 		{
 			return left.timestamp + left.delayHashmap.begin()->second <= right.timestamp + right.delayHashmap.begin()->second;
 		}
@@ -71,9 +70,9 @@ UINT Recorder::AlignTail()
 
 	TimestampType avgReleaseTimestampOfSection = 0;
 	UINT count = 0;
-	MelodyListIter iter = melodyList->begin();
-	MelodyListIter target = iter;
-	while (target != melodyList->cend())
+	MelodyPieceListIter iter = melodyPieceList->begin();
+	MelodyPieceListIter target = iter;
+	while (target != melodyPieceList->cend())
 	{
 		if (target->delayHashmap.begin()->second >= NOTE_DELAY_MIN)
 		{
@@ -82,7 +81,7 @@ UINT Recorder::AlignTail()
 
 			//跳出时iter会得到一个[target,iter)的区间，区间内则为一个对齐组，对delay进行调整
 			for (avgReleaseTimestampOfSection = target->timestamp + target->delayHashmap.begin()->second, count = 1;
-				iter != melodyList->cend() && (iter->timestamp + iter->delayHashmap.begin()->second) - (target->timestamp + target->delayHashmap.begin()->second) < NOTE_ALIGN_MAX;
+				iter != melodyPieceList->cend() && (iter->timestamp + iter->delayHashmap.begin()->second) - (target->timestamp + target->delayHashmap.begin()->second) < NOTE_ALIGN_MAX;
 				++count, ++iter)
 			{
 				auto& delay = iter->delayHashmap.begin()->second;
@@ -125,27 +124,27 @@ UINT Recorder::Combine()
 {
 	UINT result = 0;
 
-	//melodyList按timestamp从小到大排序（注意此处使用的是list，std::sort通用排序不适用list
-	melodyList->sort(
-		[](const Melody& left, const Melody& right)
+	//melodyPieceList按timestamp从小到大排序（注意此处使用的是list，std::sort通用排序不适用list
+	melodyPieceList->sort(
+		[](const MelodyPiece& left, const MelodyPiece& right)
 		{
 			return left.timestamp <= right.timestamp;
 		}
 	);
 
-	MelodyListIter iter = melodyList->begin();
-	while (iter != melodyList->cend())
+	MelodyPieceListIter iter = melodyPieceList->begin();
+	while (iter != melodyPieceList->cend())
 	{
 		//使iter为target下一个
-		MelodyListIter&& target = iter++;
+		MelodyPieceListIter&& target = iter++;
 
 		//注意此处不需要处理“数量”的问题。
-		//melodyList按timestamp从小到大排序，设某一个为t，一组7个按键中的其中一个为a，第8个（实际上是第7个找出来的元素）为b且ab为同一个键位，NOTE_ALIGN_MAX为I
+		//melodyPieceList按timestamp从小到大排序，设某一个为t，一组7个按键中的其中一个为a，第8个（实际上是第7个找出来的元素）为b且ab为同一个键位，NOTE_ALIGN_MAX为I
 		//此时b与a的时间差必小于NOTE_ALIGN_MAX
 		//反证：据题意有b<t+I，若b-a>=I既b>=I+a，则t+I>I+a，即t>a，与题意矛盾
 		//所以b-a<I。而同一个键在一个NOTE_ALIGN_MAX内被连续敲击，按NOTE_ALIGN_MAX的设定，算作一次
 		//此处合并时，以timestamp较大（靠后）的delay为准（因为后一个音可能为延音
-		while (iter != melodyList->cend() && iter->timestamp == target->timestamp)
+		while (iter != melodyPieceList->cend() && iter->timestamp == target->timestamp)
 		{
 			//提取信息。未合并前，每个iter的delayHashmap里只有一项
 			auto& targetDelayHashmap = target->delayHashmap;
@@ -157,7 +156,7 @@ UINT Recorder::Combine()
 			targetDelayHashmap.insert({ currentKeyName,currentDelay });
 
 			//移除
-			iter = melodyList->erase(iter);
+			iter = melodyPieceList->erase(iter);
 
 			//合并了一次
 			++result;
@@ -169,28 +168,28 @@ UINT Recorder::Combine()
 
 UINT Recorder::StartRecord()
 {
-	melodyList->clear();
+	melodyPieceList->clear();
 
 	return SUCCESS;
 }
 
 UINT Recorder::Record(const TimestampType& releaseTimestamp, const KeyName& key, const TimestampType& holdTime)
 {
-	if (!melodyList) return FAIL;
+	if (!melodyPieceList) return FAIL;
 
 	//特殊情况：音乐还没开始播放就已经按下了键，开始后松开，此时holdTime>releaseTimestamp（或理解成，按键时长>音乐已经播放的时长）,则砍掉音乐开始播放之前的部分
 	const TimestampType pressTimestamp = releaseTimestamp >= holdTime ? releaseTimestamp - holdTime : 0;
 	const TimestampType delay = releaseTimestamp >= holdTime ? holdTime : releaseTimestamp;
 
-	//melody中记录的是“按下”的时间戳
-	melodyList->push_back(MELODY_SINGLE(pressTimestamp, key, delay));
+	//melodyPiece中记录的是“按下”的时间戳
+	melodyPieceList->push_back(MELODY_PIECE_SINGLE(pressTimestamp, key, delay));
 
 	return SUCCESS;
 }
 
-const MelodyList* const  Recorder::FinishRecord()
+const Melody& Recorder::FinishRecord()
 {
-	size_t noteCount = melodyList->size();
+	size_t noteCount = melodyPieceList->size();
 
 	//先对齐头部（按下的时间戳，timestamp）
 	UINT headCount = AlignHead();
@@ -198,7 +197,7 @@ const MelodyList* const  Recorder::FinishRecord()
 	//再对齐尾部（尾部的时间戳，timestamp+delay）
 	UINT tailCount = AlignTail();
 
-	//合并（不合并也可以，但melodyFile会比较大）
+	//合并（不合并也可以，但melodyPieceFile会比较大）
 	UINT combineCount = Combine();
 
 	Message::ShowMessage(
@@ -208,15 +207,15 @@ const MelodyList* const  Recorder::FinishRecord()
 		TEXT("\n合并次数：") + TO_STRING(combineCount)
 	);
 
-	return melodyList;
+	return Melody(melodyPieceList);
 }
 
 UINT Recorder::Clean()
 {
-	if (melodyList)
+	if (melodyPieceList)
 	{
-		melodyList->clear();
-		delete melodyList;
+		melodyPieceList->clear();
+		delete melodyPieceList;
 	}
 
 	//未启用判断

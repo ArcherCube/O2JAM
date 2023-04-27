@@ -35,7 +35,7 @@ private:
 	//加入渲染队列后得到的“句柄”
 	const RenderTaskSetCiter renderTaskSetCiter;
 protected:
-	UINT PlayAction(const UINT& no) const;
+	UINT PlayAction(const String& actionName) const;
 public:
 	explicit Actor(const String& sourcePath, const Position& position = POSITION(0, 0), const UINT& z = 0, const Size& fullSize = SIZE(0, 0), const DWORD& renderType = SRCCOPY);
 	explicit Actor(const String& text, const COLORREF& color, const UINT& size, const Area& area = AREA(0, 0, 0, 0), const UINT& z = 0, const UINT& textAlign = DT_LEFT);

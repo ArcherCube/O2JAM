@@ -28,7 +28,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 	//必要的工具类初始化（Renderer和PhysicsEngine必须在game之前）
 	Renderer::Init(hWnd);
-	FileUtil::Init(hWnd);
 
 	//加载游戏实体
 	if (!(game = new Game())) return FALSE;
